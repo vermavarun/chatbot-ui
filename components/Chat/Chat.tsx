@@ -47,7 +47,7 @@ import { TemperatureSlider } from './Temperature';
 
 interface Props {
   stopConversationRef: MutableRefObject<boolean>;
-  instance:any;
+  instance: any;
 }
 
 const ChatChild = memo(({ stopConversationRef }: Props) => {
@@ -362,10 +362,19 @@ const ChatChild = memo(({ stopConversationRef }: Props) => {
     };
   }, [messagesEndRef]);
 
-
   return (
     <AuthenticatedTemplate>
-      <div style={{}}>{activeAccount?.username}</div>
+      <div
+        style={{
+          overflow: 'hidden',
+          position: 'fixed',
+          top: '0',
+          width: '80%',
+          textAlign:'right'
+        }}
+      >
+       Welcome {activeAccount?.name}({activeAccount?.username})
+      </div>
       <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
         {!(apiKey || serverSideApiKeyIsSet) ? (
           <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
@@ -528,20 +537,21 @@ const ChatChild = memo(({ stopConversationRef }: Props) => {
         )}
       </div>
     </AuthenticatedTemplate>
-  )
+  );
 });
 ChatChild.displayName = 'ChatChild';
-export const Chat = memo(({ stopConversationRef,instance }: Props) => {
-
+export const Chat = memo(({ stopConversationRef, instance }: Props) => {
   const handleLoginRedirect = () => {
-    instance.loginRedirect(loginRequest).catch((error:any) => console.log(error));
+    instance
+      .loginRedirect(loginRequest)
+      .catch((error: any) => console.log(error));
   };
 
   return (
     <MsalProvider instance={instance}>
       {/* <button onClick={handleLoginRedirect}> Sign In </button> */}
 
-      <ChatChild stopConversationRef={stopConversationRef} instance={""}/>
+      <ChatChild stopConversationRef={stopConversationRef} instance={''} />
     </MsalProvider>
   );
 });
