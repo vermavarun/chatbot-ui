@@ -365,7 +365,7 @@ const ChatChild = memo(({ stopConversationRef }: Props) => {
 
   return (
     <AuthenticatedTemplate>
-      <div style={{width:'100%',height:'5em'}}>{activeAccount?.username}</div>
+      <div style={{}}>{activeAccount?.username}</div>
       <div className="relative flex-1 overflow-hidden bg-white dark:bg-[#343541]">
         {!(apiKey || serverSideApiKeyIsSet) ? (
           <div className="mx-auto flex h-full w-[300px] flex-col justify-center space-y-6 sm:w-[600px]">
