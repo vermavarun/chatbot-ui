@@ -12,6 +12,8 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@azure/msal-browser": "^3.2.0",
+    "@azure/msal-react": "^2.0.4",
     "@dqbd/tiktoken": "^1.0.2",
     "@tabler/icons-react": "^2.9.0",
     "eventsource-parser": "^0.1.0",

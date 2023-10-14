@@ -1,3 +1,14 @@
+'use client';
+
+import {
+  AuthenticatedTemplate,
+  MsalProvider,
+  UnauthenticatedTemplate,
+  useMsal,
+} from '@azure/msal-react';
+import { msalConfig } from '../../../pages/authconfig';
+import { PublicClientApplication, EventType } from '@azure/msal-browser';
+
 import { useEffect, useRef, useState } from 'react';
 import { useQuery } from 'react-query';
 
@@ -45,6 +56,7 @@ interface Props {
   serverSideApiKeyIsSet: boolean;
   serverSidePluginKeysSet: boolean;
   defaultModelId: OpenAIModelID;
+  instance: any;
 }
 
 const Home = ({
@@ -52,6 +64,24 @@ const Home = ({
   serverSidePluginKeysSet,
   defaultModelId,
 }: Props) => {
+
+  const msalInstance = new PublicClientApplication(msalConfig);
+
+  // Default to using the first account if no account is active on page load
+  if (!msalInstance.getActiveAccount() && msalInstance.getAllAccounts().length > 0) {
+      // Account selection logic is app dependent. Adjust as needed for different use cases.
+      msalInstance.setActiveAccount(msalInstance.getActiveAccount()[0]);
+  }
+
+  // Listen for sign-in event and set active account
+  msalInstance.addEventCallback((event) => {
+      if (event.eventType === EventType.LOGIN_SUCCESS && event.payload?.account) {
+          const account = event.payload?.account;
+          msalInstance.setActiveAccount(account);
+      }
+  });
+
+
   const { t } = useTranslation('chat');
   const { getModels } = useApiService();
   const { getModelsError } = useErrorService();
@@ -383,9 +413,10 @@ const Home = ({
             <Chatbar />
 
             <div className="flex flex-1">
-              <Chat stopConversationRef={stopConversationRef} />
+              <MsalProvider instance={msalInstance}>
+                <Chat stopConversationRef={stopConversationRef} instance={msalInstance} />
+              </MsalProvider>
             </div>
-
             <Promptbar />
           </div>
         </main>
